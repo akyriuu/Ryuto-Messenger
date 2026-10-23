@@ -791,6 +791,55 @@ input:focus-visible {
 }
 .topbar-right {
   gap: 7px;
+  position: relative;
+}
+.options-menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 210px;
+  padding: 6px;
+  border: 1px solid #30313a;
+  border-radius: 12px;
+  background: #1b1c21;
+  box-shadow: 0 14px 36px #0008;
+}
+.options-menu button {
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  padding: 11px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #e8e9ed;
+  background: transparent;
+  text-align: left;
+  font-size: 12px;
+}
+.options-menu button:hover {
+  background: #282a31;
+}
+.account-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 680px;
+}
+.account-card p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.account-detail {
+  display: grid;
+  gap: 5px;
+  margin-left: auto;
+  font-size: 12px;
+}
+.account-detail span {
+  color: var(--muted);
 }
 .connection-status {
   display: flex;
@@ -1538,5 +1587,38 @@ input:focus-visible {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Seletor de imagem do perfil */
+.profile-icon-preview,
+.user-profile .self-avatar {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+.profile-account-card {
+  flex-wrap: wrap;
+}
+.profile-icon-actions {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-left: 54px;
+}
+.profile-icon-actions small {
+  flex-basis: 100%;
+  color: #858693;
+  font-size: 11px;
+}
+.profile-icon-input {
+  display: none;
+}
+@media (max-width: 600px) {
+  .profile-icon-actions {
+    padding-left: 0;
   }
 }

@@ -17,7 +17,7 @@ A experiência busca ser simples: encontrar pessoas, iniciar uma conversa e troc
 - Facilitar conversas rápidas enquanto a pessoa continua usando o navegador.
 - Manter a experiência leve, direta e sem excesso de elementos.
 - Permitir comunicação em tempo real entre pessoas conectadas.
-- Evoluir para uma extensão de navegador com acesso rápido ao chat.
+- Disponibilizar o chat como extensão para Chrome e Firefox.
 
 
 
@@ -31,7 +31,7 @@ A experiência busca ser simples: encontrar pessoas, iniciar uma conversa e troc
 - Comunicação em tempo real com Socket.IO.
 - Frontend web em React e TypeScript.
 
-A extensão Chrome Manifest V3 oferece autenticação, contatos, solicitações de amizade e conversas usando o mesmo backend do frontend web.
+A extensão Manifest V3 para Chrome e Firefox oferece autenticação, contatos, solicitações de amizade e conversas usando o mesmo backend do frontend web.
 
 ### Autenticação
 
@@ -61,7 +61,7 @@ uma maiúscula e um número. O cadastro e o login não exigem e-mail.
 
 ### Extensão
 
-A extensão Chrome Manifest V3 se conecta ao backend publicado em `https://ryuto-messenger.onrender.com` por padrão. Para compilar e instalar, consulte [extension/README.md](./extension/README.md).
+A extensão para Chrome e Firefox se conecta ao backend publicado em `https://ryuto-messenger.onrender.com` por padrão. Para gerar os pacotes e ver as instruções de instalação, consulte [extension/README.md](./extension/README.md).
 
 ## Arquitetura
 
@@ -76,12 +76,12 @@ A extensão Chrome Manifest V3 se conecta ao backend publicado em `https://ryuto
 │   ├── realtime/            # Gateway Socket.IO
 │   └── database/            # Integração com Prisma
 ├── web/                     # Aplicação React + Vite
-└── extension/               # Estrutura inicial da extensão
+└── extension/               # Extensões Chrome e Firefox
 ```
 
 ### Extensão
 
-Futuramente, o Orbit Messenger será disponibilizado como uma extensão para navegador, permitindo acessar conversas rapidamente sem sair da página atual.
+As extensões para Chrome e Firefox permitem acessar conversas rapidamente sem sair da página atual.
 
 ## Interface
 
@@ -89,6 +89,4 @@ A interface prioriza simplicidade e acesso rápido às conversas, sem atrapalhar
 
 ## Próximos passos
 
-- Concluir a extensão para navegador.
-- Integrar a extensão ao backend e às conversas em tempo real.
 - Refinar a experiência de uso.

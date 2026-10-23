@@ -5,3 +5,4 @@ ADD COLUMN "emailVerificationTokenHash" TEXT,
 ADD COLUMN "emailVerificationExpiresAt" TIMESTAMP(3);
 
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+ALTER TABLE "User" ADD COLUMN "avatarUrl" TEXT;

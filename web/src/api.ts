@@ -57,8 +57,17 @@ export const api = {
       body: JSON.stringify({ username, password }),
     }),
 
-  friends: (token: string) =>
-    request<Friend[]>('/friends', {}, token),
+  updateAvatar: (avatarUrl: string, token: string) =>
+    request<User>(
+      '/auth/me/avatar',
+      {
+        method: 'PATCH',
+        body: JSON.stringify({ avatarUrl }),
+      },
+      token,
+    ),
+
+  friends: (token: string) => request<Friend[]>('/friends', {}, token),
 
   incomingRequests: (token: string) =>
     request<FriendRequest[]>('/friends/requests/incoming', {}, token),
@@ -67,21 +76,37 @@ export const api = {
     request<FriendRequest[]>('/friends/requests/outgoing', {}, token),
 
   sendFriendRequest: (username: string, token: string) =>
-    request<FriendRequest>('/friends/requests', {
-      method: 'POST',
-      body: JSON.stringify({ username }),
-    }, token),
+    request<FriendRequest>(
+      '/friends/requests',
+      {
+        method: 'POST',
+        body: JSON.stringify({ username }),
+      },
+      token,
+    ),
 
   acceptRequest: (id: string, token: string) =>
-    request<FriendRequest>(`/friends/requests/${encodeURIComponent(id)}/accept`, {
-      method: 'PATCH',
-    }, token),
+    request<FriendRequest>(
+      `/friends/requests/${encodeURIComponent(id)}/accept`,
+      {
+        method: 'PATCH',
+      },
+      token,
+    ),
 
   rejectRequest: (id: string, token: string) =>
-    request<FriendRequest>(`/friends/requests/${encodeURIComponent(id)}/reject`, {
-      method: 'PATCH',
-    }, token),
+    request<FriendRequest>(
+      `/friends/requests/${encodeURIComponent(id)}/reject`,
+      {
+        method: 'PATCH',
+      },
+      token,
+    ),
 
   history: (otherUserId: string, token: string) =>
-    request<ChatMessage[]>(`/messages/${encodeURIComponent(otherUserId)}`, {}, token),
+    request<ChatMessage[]>(
+      `/messages/${encodeURIComponent(otherUserId)}`,
+      {},
+      token,
+    ),
 };

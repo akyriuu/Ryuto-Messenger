@@ -22,6 +22,7 @@ model User {
   emailVerificationExpiresAt DateTime?
   passwordHash               String
   createdAt                  DateTime  @default(now())
+  avatarUrl                  String?  @db.Text
 
   // Named relations matching Friendship
   sentRequests     Friendship[] @relation("sentRequests")

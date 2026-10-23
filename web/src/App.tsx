@@ -81,6 +81,40 @@ export default function App() {
   const [friendUsername, setFriendUsername] = useState('');
   const [showAddFriend, setShowAddFriend] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const [accountPage, setAccountPage] = useState<
+    'profile' | 'settings' | 'notifications' | null
+  >(null);
+  const [profileIcon, setProfileIcon] = useState<string>(
+    () => localStorage.getItem('orbit_profile_icon') || '',
+  );
+  const profileIconInput = useRef<HTMLInputElement | null>(null);
+
+  const chooseProfileIcon = (file?: File) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      notify('Escolha um arquivo de imagem.', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const image = String(reader.result || '');
+      try {
+        localStorage.setItem('orbit_profile_icon', image);
+        setProfileIcon(image);
+        notify('Ícone do perfil atualizado.');
+      } catch {
+        notify('A imagem é muito grande. Escolha uma imagem menor.', 'error');
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeProfileIcon = () => {
+    localStorage.removeItem('orbit_profile_icon');
+    setProfileIcon('');
+    if (profileIconInput.current) profileIconInput.current.value = '';
+  };
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
@@ -595,8 +629,15 @@ export default function App() {
         </button>
         <div className="sidebar-bottom">
           <div className="user-profile">
-            <div className="avatar self-avatar">
-              {initials(session.user.username)}
+            <div
+              className="avatar self-avatar"
+              style={
+                profileIcon
+                  ? { backgroundImage: `url(${profileIcon})` }
+                  : undefined
+              }
+            >
+              {!profileIcon && initials(session.user.username)}
             </div>
             <div className="user-profile-info">
               <b>{session.user.username}</b>
@@ -655,14 +696,160 @@ export default function App() {
             <button
               className="icon-button"
               title="Mais opções"
-              onClick={() => notify('Mais opções em breve.')}
+              aria-expanded={showOptions}
+              onClick={() => setShowOptions((value) => !value)}
             >
               <MoreHorizontal size={19} />
             </button>
+            {showOptions && (
+              <div className="options-menu" role="menu">
+                <button
+                  role="menuitem"
+                  onClick={() => {
+                    setAccountPage('profile');
+                    setShowOptions(false);
+                    setShowRequests(false);
+                  }}
+                >
+                  <Users size={16} /> Meu perfil
+                </button>
+                <button
+                  role="menuitem"
+                  onClick={() => {
+                    setAccountPage('settings');
+                    setShowOptions(false);
+                    setShowRequests(false);
+                  }}
+                >
+                  <Settings2 size={16} /> Configurações
+                </button>
+                <button
+                  role="menuitem"
+                  onClick={() => {
+                    setAccountPage('notifications');
+                    setShowOptions(false);
+                    setShowRequests(false);
+                  }}
+                >
+                  <Bell size={16} /> Notificações
+                </button>
+              </div>
+            )}
           </div>
         </header>
 
-        {showRequests ? (
+        {accountPage ? (
+          <div className="requests-page account-page">
+            <div className="page-heading">
+              <div>
+                <div className="eyebrow">SUA CONTA</div>
+                <h1>
+                  {accountPage === 'profile'
+                    ? 'Meu perfil'
+                    : accountPage === 'settings'
+                      ? 'Configurações'
+                      : 'Notificações'}
+                </h1>
+                <p>
+                  {accountPage === 'profile'
+                    ? 'Suas informações de conta.'
+                    : accountPage === 'settings'
+                      ? 'Preferências do aplicativo.'
+                      : 'Atividade e solicitações da sua conta.'}
+                </p>
+              </div>
+              <button
+                className="secondary-button"
+                onClick={() => setAccountPage(null)}
+              >
+                Voltar para mensagens
+              </button>
+            </div>
+            {accountPage === 'profile' && (
+              <section className="request-card account-card profile-account-card">
+                <div
+                  className="avatar self-avatar large-avatar profile-icon-preview"
+                  style={
+                    profileIcon
+                      ? { backgroundImage: `url(${profileIcon})` }
+                      : undefined
+                  }
+                >
+                  {!profileIcon && initials(session.user.username)}
+                </div>
+                <div className="request-person">
+                  <b>{session.user.username}</b>
+                  <span>Nome de usuário</span>
+                </div>
+                <div className="account-detail">
+                  <span>Status</span>
+                  <b>{socketConnected ? 'Conectado' : 'Desconectado'}</b>
+                </div>
+                <div className="profile-icon-actions">
+                  <input
+                    ref={profileIconInput}
+                    className="profile-icon-input"
+                    type="file"
+                    accept="image/*"
+                    aria-label="Selecionar imagem do perfil"
+                    onChange={(event) =>
+                      chooseProfileIcon(event.target.files?.[0])
+                    }
+                  />
+                  <button
+                    className="secondary-button"
+                    onClick={() => profileIconInput.current?.click()}
+                  >
+                    {profileIcon ? 'Trocar imagem' : 'Escolher imagem'}
+                  </button>
+                  {profileIcon && (
+                    <button
+                      className="secondary-button"
+                      onClick={removeProfileIcon}
+                    >
+                      Remover
+                    </button>
+                  )}
+                  <small>
+                    Selecione uma imagem do seu dispositivo. Ela fica salva
+                    neste navegador.
+                  </small>
+                </div>
+              </section>
+            )}
+            {accountPage === 'settings' && (
+              <section className="request-card account-card">
+                <div>
+                  <b>Sessão</b>
+                  <p>Gerencie o acesso à sua conta neste dispositivo.</p>
+                </div>
+                <button className="secondary-button" onClick={logout}>
+                  <LogOut size={16} /> Sair da conta
+                </button>
+              </section>
+            )}
+            {accountPage === 'notifications' && (
+              <section className="request-card account-card">
+                <div>
+                  <b>Solicitações recebidas</b>
+                  <p>
+                    Você tem {incoming.length} solicitação(ões) aguardando
+                    resposta.
+                  </p>
+                </div>
+                <button
+                  className="secondary-button"
+                  onClick={() => {
+                    setAccountPage(null);
+                    setShowRequests(true);
+                  }}
+                >
+                  Ver solicitações
+                </button>
+              </section>
+            )}
+          </div>
+        ) : showRequests ? (
           <div className="requests-page">
             <div className="page-heading">
               <div>

@@ -482,6 +482,10 @@ input:focus {
   background: radial-gradient(ellipse at 60% 30%, #1e3329 0, var(--bg) 58%);
 }
 
+.chat:has(.chat-empty) {
+  background: radial-gradient(ellipse at 60% 30%, #1a1b1f 0, #121316 58%);
+}
+
 .chat-empty {
   display: flex;
   height: 100%;

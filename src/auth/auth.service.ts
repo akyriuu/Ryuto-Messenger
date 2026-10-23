@@ -94,7 +94,35 @@ export class AuthService {
       user: {
         id: user.id,
         username: user.username,
+        avatarUrl: user.avatarUrl,
       },
     };
+  }
+
+  async updateAvatar(userId: string, avatarUrl: string) {
+    const match =
+      /^data:image\/(png|jpeg|webp|gif);base64,([A-Za-z0-9+/]+={0,2})$/.exec(
+        avatarUrl,
+      );
+
+    if (!match) {
+      throw new BadRequestException(
+        'Envie uma imagem PNG, JPG, WEBP, ou GIF válida.',
+      );
+    }
+
+    const imageBytes = Buffer.from(match[2], 'base64');
+
+    if (imageBytes.length > 1024 * 1024) {
+      throw new BadRequestException('A imagem deve ter no máximo 1 MB.');
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: { avatarUrl },
+      select: { id: true, username: true, avatarUrl: true },
+    });
+
+    return user;
   }
 }

@@ -1,14 +1,14 @@
 import { defineConfig } from 'vite';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   base: './',
   build: {
-    outDir: 'dist',
+    outDir: `dist-${mode}`,
     emptyOutDir: true,
     rollupOptions: {
       input: {
         index: 'index.html',
-        background: 'src/background.ts',
+        ...(mode === 'chrome' ? { background: 'src/background.ts' } : {}),
       },
       output: {
         entryFileNames: '[name].js',
@@ -17,4 +17,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
